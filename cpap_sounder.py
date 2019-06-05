@@ -6,7 +6,7 @@ print "kicking off after reboot:\n";
 
 while (1)
 {
-  system ("AUDIODEV=hw:1 rec file_size.wav trim 0 6 2>/dev/null ");
+  system ("AUDIODEV=hw:1 rec file_size.wav trim 0 600 2>/dev/null ");
   system ("gzip -f file_size.wav");
   my $size = `stat -c %s file_size.wav.gz`;
   chop $size;
