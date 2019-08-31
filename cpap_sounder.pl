@@ -50,7 +50,7 @@ while (1)
   $date = `date`;
   chop $date;
   print "Filesize at $date : $size\n";
-  if ( $size < 42612996 || $size > 60612996 )  
+  if ( $size < 42612996 )  
   {
     $date = `date`;
     chop $date;
