@@ -14,6 +14,10 @@ if ( $find_count eq 1 )
   # only sleep if this is the first reboot of the night
   system ("sleep 900");
 }
+{
+  # sleep for 2 minutes to minimize chances of false alarm
+  system ("sleep 120");
+}
 
   # 10 minute file size on the low end when no sound(cpap going): 
   # 4217427
