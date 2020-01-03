@@ -6,10 +6,14 @@ use strict;
 my $date = `date`;
 chop $date;
 
+my $find_count = `find /var/log/cpap_sounder.touch -cmin -120 -ls 2>/dev/null| wc -l`;
 print "\n\nkicking off after reboot at $date :\n";
 print "sleeping for 15 minutes before starting if this is the first start of the night\n";
-my $find_count = `find /var/log/cpap_sounder.log -cmin -110 -ls| wc -l`;
-if ( $find_count eq 1 )
+print "find_count = >$find_count<\n";
+# replace any non digit with ""
+$find_count =~ s/\D//g;
+print "find_count = >$find_count<\n";
+if ( $find_count > 0 )
 {
   # sleep for 1 minute to minimize chances of false alarm
   system ("sleep 60");
@@ -17,7 +21,7 @@ if ( $find_count eq 1 )
 else
 {
   # only sleep if this is the first reboot of the night
-  system ("sleep 5400");
+  system ("sleep 1800");
 }
 
 while (1)
@@ -48,7 +52,7 @@ while (1)
     #system ("sleep 90");
     #system ("pkill -9 play");
     print "Rebooting now at: $date size : $size to verify speaker is working\n";
-    system ("pkill -9 play; sleep 12; shutdown -rf now");
+    system ("touch /var/log/cpap_sounder.touch; pkill -9 play; sleep 12; shutdown -rf now");
   }
   elsif ( $size > 9960000000 )  
   #elsif ( $size > 4980000000 )  
@@ -67,6 +71,6 @@ while (1)
     #system ("sleep 60");
     #system ("pkill -9 play");
     print "Rebooting now at: $date size : $size to verify speaker is working\n";
-    system ("pkill -9 play; sleep 12; shutdown -rf now");
+    system ("touch /var/log/cpap_sounder.touch; pkill -9 play; sleep 12; shutdown -rf now");
   }
 }
