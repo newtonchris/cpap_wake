@@ -56,22 +56,13 @@ while (1)
     system ("AUDIODEV=hw:2 play alarm1.mp3 > /dev/null 2>&1");
     system ("sleep 3");
     system ("AUDIODEV=hw:2 play alarm1.mp3 > /dev/null 2>&1");
-    #system ("AUDIODEV=hw:2 play bigmikeydread_2013-05-27T11_25_52-07_00.mp3& > /dev/null 2>&1");
     print "Playing song at $date size : $size\n";
     system ("sleep 30");
     system ("pkill -9 play");
-    #system ("AUDIODEV=hw:2 play Haydn_Adagio.mp3 > /dev/null 2>&1");
-    #print "Playing song at $date size : $size\n";
-    #system ("AUDIODEV=hw:2 play Haydn_Adagio.mp3 > /dev/null 2>&1");
-    #print "Playing song at $date size : $size\n";
-    #system ("AUDIODEV=hw:2 play Haydn_Adagio.mp3 > /dev/null 2>&1");
-    #system ("sleep 90");
-    #system ("pkill -9 play");
     print "Rebooting now at: $date size : $size to verify speaker is working\n";
     system ("touch /var/log/cpap_sounder.touch; pkill -9 play; sleep 12; shutdown -rf now");
   }
   elsif ( $size > 69270320 )  
-  #elsif ( $size > 4980000000 )  
   {
     $date = `date`;
     chop $date;
@@ -85,15 +76,9 @@ while (1)
     system ("AUDIODEV=hw:2 play alarm1.mp3 > /dev/null 2>&1");
     system ("sleep 30");
     system ("AUDIODEV=hw:2 play alarm1.mp3 > /dev/null 2>&1");
-    #system ("AUDIODEV=hw:2 play bigmikeydread_2013-05-27T11_25_52-07_00.mp3& > /dev/null 2>&1");
     print "Playing song at $date size : $size\n";
     system ("sleep 30");
     system ("pkill -9 play");
-    #system ("AUDIODEV=hw:2 play Haydn_Adagio.mp3 > /dev/null 2>&1");
-    #print "Playing song at $date size : $size\n";
-    #system ("AUDIODEV=hw:2 play Haydn_Adagio.mp3 > /dev/null 2>&1");
-    #system ("sleep 60");
-    #system ("pkill -9 play");
     print "Rebooting now at: $date size : $size to verify speaker is working\n";
     system ("touch /var/log/cpap_sounder.touch; pkill -9 play; sleep 12; shutdown -rf now");
   }
