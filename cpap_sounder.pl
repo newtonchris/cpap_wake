@@ -88,7 +88,8 @@ sub play_song
     my $file_size_calculated = 42612996 * ($seconds_between_play / 60 / 10);
     print "$date: Small file size: $size seconds_between_play:$seconds_between_play file_size_calculated: $file_size_calculated\n";
 
-    if ( $size < $file_size_calculated )  
+    # reverse of if comparison above in while
+    if ( $size > $file_size_calculated )  
     {
       # Will next out of while above if cpap is back on to save the reboot
       # This makes it so we don't have to turn off/on the rasberry pi
