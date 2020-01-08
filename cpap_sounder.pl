@@ -77,16 +77,23 @@ sub play_song
     my $date = `date`;
     chop $date;
     print "Playing song time # $count at $date\n";
-    system ("AUDIODEV=hw:2 play alarm1.mp3 > /dev/null 2>&1");
+    my $play_count = 0;
+    while ( $play_count < $count )
+    {
+      system ("AUDIODEV=hw:2 play alarm1.mp3 > /dev/null 2>&1");
+      system ("sleep 1");
+      $play_count++;
+    }
     system ("sleep 10");
+
     # record $seconds_between_play of audio and check if cpap is back on
     system ("AUDIODEV=hw:1 rec small_file_size.wav trim 0 $seconds_between_play > /dev/null 2>&1 ");
     system ("gzip --best -f small_file_size.wav");
-    my $size = `stat -c %s file_size.wav.gz`;
+    my $size = `stat -c %s small_file_size.wav.gz`;
     chop $size;
     $count++;
     my $file_size_calculated = 42612996 * ($seconds_between_play / 60 / 10);
-    print "$date: Small file size: $size seconds_between_play:$seconds_between_play file_size_calculated: $file_size_calculated\n";
+    print "$date: if $size > $file_size_calculated returning 1\n";
 
     # reverse of if comparison above in while
     if ( $size > $file_size_calculated )  
