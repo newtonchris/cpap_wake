@@ -19,7 +19,7 @@ $find_count =~ s/\D//g;
 
 print "\n\nkicking off after reboot at $date1 :\n";
 print ">$ls1<\n";
-print ">$find_count<\n\n";
+print ">$find_count<\n";
 if ( $find_count < 1 )
 {
   # sleep for 1 minute to minimize chances of false alarm
@@ -76,7 +76,6 @@ sub play_song
   {
     my $date = `date`;
     chop $date;
-    print "Playing song time # $count at $date\n";
     my $play_count = 0;
     while ( $play_count < $count )
     {
@@ -93,13 +92,14 @@ sub play_song
     chop $size;
     $count++;
     my $file_size_calculated = 42612996 * ($seconds_between_play / 60 / 10);
-    print "$date: if $size > $file_size_calculated returning 1\n";
+    print "in play_song #$count: $date: if $size > $file_size_calculated returning 1\n";
 
     # reverse of if comparison above in while
     if ( $size > $file_size_calculated )  
     {
       # Will next out of while above if cpap is back on to save the reboot
       # This makes it so we don't have to turn off/on the rasberry pi
+      print "in play_song #$count: returning 1 which means no reboot\n";
       return 1;
     }
   }
