@@ -34,6 +34,7 @@ else
   system ("sleep 5400");
   system ("touch /var/log/cpap_sounder.touch");
 }
+my $counter = 1;
 
 while (1)
 {
@@ -45,13 +46,14 @@ while (1)
   chop $size;
   $date = `date`;
   chop $date;
-  print "Filesize at $date : $size\n";
+  print "#$counter: Filesize at $date : $size\n";
   if ( $size < 42612996 )  
   #if ( $size < 25306498 )
   {
     $date = `date`;
     chop $date;
-    my $return_value = play_song(10,60);
+    my $return_value = play_song(3,60);
+    $counter++;
     next if ( $return_value eq 1 );
     print "Rebooting now at: $date size : $size to verify speaker is working\n";
     system ("touch /var/log/cpap_sounder.touch; pkill -9 play; sleep 12; shutdown -rf now");
@@ -61,29 +63,50 @@ while (1)
     $date = `date`;
     chop $date;
     print "Possibly off head but still pumping air: $date size : $size\n";
-    my $return_value = play_song(10,60);
+    my $return_value = play_song(3,60);
+    $counter++;
     next if ( $return_value eq 1 );
     print "Rebooting now at: $date size : $size to verify speaker is working\n";
     system ("touch /var/log/cpap_sounder.touch; pkill -9 play; sleep 12; shutdown -rf now");
   }
+  else
+  {
+    $counter++;
+  }
+
 }
 
 sub play_song
 {
   my ($times_to_play,$seconds_between_play) = @_;
-  my $count = 1;
-  while ($count < $times_to_play)
+  my $count = 0;
+  while ($count <= $times_to_play)
   {
     my $date = `date`;
     chop $date;
+    system ("pkill -9 play");
+
     my $play_count = 0;
-    while ( $play_count < $count )
+    # loop to play multiple differnet alarms at different iterations
+    # each iteration gets more annoying
+    while ( $play_count <= $count )
     {
+      print "About to play alarm1.mp3\n";
+      system ("pkill -9 play");
       system ("AUDIODEV=hw:2 play alarm1.mp3 > /dev/null 2>&1");
-      system ("sleep 1");
+      if ( $count > 1 )
+      {
+        print "About to play alarm2.mp3\n";
+        system ("pkill -9 play");
+        system ("AUDIODEV=hw:2 play alarm2.mp3 > /dev/null 2>&1");
+      }
+      if ( $count > 2 )
+      {
+        print "About to play alarm4.mp3\n";
+        system ("AUDIODEV=hw:2 play alarm4.wav > /dev/null 2>&1");
+      }
       $play_count++;
     }
-    system ("sleep 10");
 
     # record $seconds_between_play of audio and check if cpap is back on
     system ("AUDIODEV=hw:1 rec small_file_size.wav trim 0 $seconds_between_play > /dev/null 2>&1 ");
@@ -92,14 +115,14 @@ sub play_song
     chop $size;
     $count++;
     my $file_size_calculated = 42612996 * ($seconds_between_play / 60 / 10);
-    print "in play_song #$count: $date: if $size > $file_size_calculated returning 1\n";
+    print "in play_song #$counter,#$count: $date: if $size > $file_size_calculated returning 1\n";
 
     # reverse of if comparison above in while
     if ( $size > $file_size_calculated )  
     {
       # Will next out of while above if cpap is back on to save the reboot
       # This makes it so we don't have to turn off/on the rasberry pi
-      print "in play_song #$count: returning 1 which means no reboot\n";
+      print "in play_song #$counter,#$count: returning 1 which means no reboot\n";
       return 1;
     }
   }
