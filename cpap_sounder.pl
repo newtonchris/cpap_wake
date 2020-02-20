@@ -47,18 +47,18 @@ while (1)
   $date = `date`;
   chop $date;
   print "#$counter: Filesize at $date : $size\n";
-  if ( $size < 42612996 )  
+  if ( $size < 38612996 )  
   #if ( $size < 25306498 )
   {
     $date = `date`;
     chop $date;
-    my $return_value = play_song(3,60);
+    my $return_value = play_song(7,60);
     $counter++;
     next if ( $return_value eq 1 );
     print "Rebooting now at: $date size : $size to verify speaker is working\n";
     system ("touch /var/log/cpap_sounder.touch; pkill -9 play; sleep 12; shutdown -rf now");
   }
-  elsif ( $size > 69270320 )  
+  elsif ( $size > 4469270320 )  
   {
     $date = `date`;
     chop $date;
@@ -93,17 +93,28 @@ sub play_song
     {
       print "About to play alarm1.mp3\n";
       system ("pkill -9 play");
-      system ("AUDIODEV=hw:2 play alarm1.mp3 > /dev/null 2>&1");
-      if ( $count > 1 )
+      system ("AUDIODEV=hw:2 play Haydn_Adagio.mp3 > /dev/null 2>&1&");
+      system ("sleep 10");
+      system ("pkill -9 play");
+      if ( $count > 4 )
+      {
+        print "About to play alarm1.mp3\n";
+        system ("pkill -9 play");
+        system ("AUDIODEV=hw:2 play alarm1.mp3 > /dev/null 2>&1");
+        if ( $count eq 4 ) { $play_count++;next; }
+      }
+      if ( $count > 5 )
       {
         print "About to play alarm2.mp3\n";
         system ("pkill -9 play");
         system ("AUDIODEV=hw:2 play alarm2.mp3 > /dev/null 2>&1");
+        if ( $count eq 5 ) { $play_count++;next; }
       }
-      if ( $count > 2 )
+      if ( $count > 6 )
       {
         print "About to play alarm4.mp3\n";
         system ("AUDIODEV=hw:2 play alarm4.wav > /dev/null 2>&1");
+        if ( $count eq 6 ) { $play_count++;next; }
       }
       $play_count++;
     }
